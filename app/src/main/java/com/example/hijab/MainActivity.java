@@ -1,28 +1,26 @@
 package com.example.hijab;
 
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Application;
-import androidx.fragment.app.Fragment;
-import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
-
 import com.example.hijab.db.HijabDatasource;
 import com.example.hijab.entity.Hijab;
-import com.example.hijab.viewmodel.ViewM;
+import com.example.hijab.viewmodel.HijabViewmodel;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import dagger.android.AndroidInjection;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
@@ -33,11 +31,16 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
 
+    public HijabViewmodel hijabViewmodel;
 
+    @Inject
+   public ViewModelProvider.Factory viewModelFactory;
     private HijabDatasource data;
     public static final String TAG = "hijab";
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
+
+
 
     @Inject
     public Calculator calculator;
@@ -49,10 +52,8 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         setContentView(R.layout.activity_main);
 
 
-        ViewM hijabViewmodel = ViewModelProviders
-                .of(this, new ViewModelProvider.AndroidViewModelFactory((Application) this.getApplicationContext())).get(ViewM.class);
-
-
+        hijabViewmodel = ViewModelProviders.of(this, viewModelFactory)
+                .get(HijabViewmodel.class);
 
             mRecyclerView = findViewById(R.id.hijab_list_view);
 
@@ -62,9 +63,9 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
 
             Hijab hijab = new Hijab("Second Hijab", "Abaya");
-            hijabViewmodel.insertData(hijab);
+//            hijabViewmodel.insertData(hijab);
 
-        hijabViewmodel.findAll().observe(this, new Observer<List<Hijab>>() {
+        hijabViewmodel.getHijabs().observe(this, new Observer<List<Hijab>>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onChanged(List<Hijab> hijabs) {
@@ -84,20 +85,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-//        data.open();
-
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-//        data.close();
-    }
 
     public void createHijabs() {
         Hijab hijab = new Hijab("First Hijab", "Abaya");

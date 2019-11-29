@@ -1,25 +1,29 @@
 package com.example.hijab.repo;
 
-import android.content.Context;
+import androidx.lifecycle.LiveData;
 
-import com.example.hijab.db.HijabDatasource;
+import com.example.hijab.dao.HijabDao;
 import com.example.hijab.entity.Hijab;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class HijabRepo {
 
-    private HijabDatasource data;
 
-    public HijabRepo(Context context) {
-        this.data = new HijabDatasource(context);
+    private HijabDao hijabDao;
 
+    @Inject
+    HijabRepo(HijabDao hijabDao) {
+        this.hijabDao = hijabDao;
     }
 
-    public List<Hijab> findAll(){
+    public LiveData<List<Hijab>>getHijabs(){
 
-        data.open();
-        return  data.findAll();
+        return  hijabDao.getHijabs();
     }
+
+
 
 }

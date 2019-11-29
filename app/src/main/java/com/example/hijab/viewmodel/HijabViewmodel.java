@@ -13,22 +13,28 @@ import com.example.hijab.repo.HijabRepo;
 
 import java.util.List;
 
-public class HijabViewmodel extends AndroidViewModel {
+import javax.inject.Inject;
+
+public class HijabViewmodel extends ViewModel {
+
+    private LiveData<List<Hijab>> hijabs;
+
+    @Inject
+    HijabViewmodel(HijabRepo hijabRepo) {
 
 
-    private MutableLiveData<List<Hijab>> all = new MutableLiveData<>();
+        hijabs = hijabRepo.getHijabs();
 
-    public HijabViewmodel(Application application) {
-        super(application);
 
-        HijabRepo repo = new HijabRepo(application.getApplicationContext());
-       all.setValue(repo.findAll() );
     }
 
 
 
-    public LiveData<List<Hijab>> findAll() {
 
-       return all;
+    public LiveData<List<Hijab>> getHijabs() {
+
+        return hijabs;
     }
+
+
 }

@@ -15,7 +15,7 @@ import javax.inject.Singleton;
 @Component(
         modules = {
                 AndroidSupportInjectionModule.class, //use has support
-//        AppModule::class,
+        AppModule.class,
         MainActivityModule.class
 
         }
