@@ -1,13 +1,8 @@
 package com.example.hijab.viewmodel;
 
-import android.app.Application;
-
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.hijab.db.HijabDatasource;
 import com.example.hijab.entity.Hijab;
 import com.example.hijab.repo.HijabRepo;
 
@@ -18,11 +13,12 @@ import javax.inject.Inject;
 public class HijabViewmodel extends ViewModel {
 
     private LiveData<List<Hijab>> hijabs;
+    private HijabRepo hijabRepo;
 
     @Inject
     HijabViewmodel(HijabRepo hijabRepo) {
 
-
+        this.hijabRepo = hijabRepo;
         hijabs = hijabRepo.getHijabs();
 
 
@@ -35,6 +31,14 @@ public class HijabViewmodel extends ViewModel {
 
         return hijabs;
     }
+
+    public void insert(Hijab hijab) {
+
+        hijabRepo.insert(hijab);
+
+    }
+
+
 
 
 }

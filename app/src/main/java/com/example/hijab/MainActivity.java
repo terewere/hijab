@@ -62,8 +62,8 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
 
-            Hijab hijab = new Hijab("Second Hijab", "Abaya");
-//            hijabViewmodel.insertData(hijab);
+            Hijab hijab = new Hijab("Another Hijab", "Another Abaya");
+            hijabViewmodel.insert(hijab);
 
         hijabViewmodel.getHijabs().observe(this, new Observer<List<Hijab>>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
