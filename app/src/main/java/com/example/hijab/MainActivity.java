@@ -9,46 +9,60 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Application;
+import androidx.fragment.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.example.hijab.db.HijabDatasource;
 import com.example.hijab.entity.Hijab;
-import com.example.hijab.viewmodel.HijabViewmodel;
+import com.example.hijab.viewmodel.ViewM;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.support.HasSupportFragmentInjector;
+
+public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector  {
+
+
+    @Inject
+    DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
+
 
     private HijabDatasource data;
     public static final String TAG = "hijab";
-    private RecyclerView recyclerView;
+    private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
+
+    @Inject
+    public Calculator calculator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
-        HijabViewmodel hijabViewmodel = ViewModelProviders
-                .of(this, new ViewModelProvider.AndroidViewModelFactory((Application) this.getApplicationContext())).get(HijabViewmodel.class);
+        ViewM hijabViewmodel = ViewModelProviders
+                .of(this, new ViewModelProvider.AndroidViewModelFactory((Application) this.getApplicationContext())).get(ViewM.class);
 
 
 
+            mRecyclerView = findViewById(R.id.hijab_list_view);
 
-        recyclerView = findViewById(R.id.my_recycler_view);
+            mRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        recyclerView.setHasFixedSize(true);
 
-        // use a linear layout manager
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-
-        
+            Hijab hijab = new Hijab("Second Hijab", "Abaya");
+            hijabViewmodel.insertData(hijab);
 
         hijabViewmodel.findAll().observe(this, new Observer<List<Hijab>>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -56,12 +70,16 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(List<Hijab> hijabs) {
 
 
-                // specify an adapter (see also next example)
                 mAdapter = new HijabListAdapter(hijabs);
-                recyclerView.setAdapter(mAdapter);
+                mRecyclerView.setAdapter(mAdapter);
                 hijabs.forEach(hijab -> Log.i(TAG, "onChanged: " + hijab.getName()));
             }
         });
+
+
+        Log.i(TAG, "onCreate: " + calculator.getName());
+
+
 
 
     }
@@ -78,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
-        data.close();
+//        data.close();
     }
 
     public void createHijabs() {
@@ -89,6 +107,11 @@ public class MainActivity extends AppCompatActivity {
         hijab = new Hijab("Second Hijab", "Veil");
         data.insert(hijab);
 
+    }
+
+    @Override
+    public AndroidInjector<Fragment> supportFragmentInjector() {
+        return dispatchingAndroidInjector;
     }
 
 

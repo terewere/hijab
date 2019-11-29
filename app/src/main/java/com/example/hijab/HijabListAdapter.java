@@ -1,6 +1,5 @@
 package com.example.hijab;
 
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,51 +12,45 @@ import com.example.hijab.entity.Hijab;
 
 import java.util.List;
 
-public class HijabListAdapter extends RecyclerView.Adapter<HijabListAdapter.HijabViewHolder> {
-    private List<Hijab> hijabList;
+final class HijabListAdapter extends RecyclerView.Adapter<HijabListAdapter.HijabViewHolder> {
 
+    final private List<Hijab> hijabList;
 
-
-    // Provide a suitable constructor (depends on the kind of dataset)
-    public HijabListAdapter(List<Hijab> hijabList) {
-        this.hijabList = hijabList;
+    public HijabListAdapter(List<Hijab> hijabs) {
+        this.hijabList = hijabs;
     }
 
-    // Create new views (invoked by the layout manager)
     @NonNull
     @Override
-    public HijabListAdapter.HijabViewHolder onCreateViewHolder(ViewGroup parent,
-                                                     int viewType) {
+    public final HijabViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
 
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.hijab_item, parent, false);
-        return new HijabViewHolder(v);
-
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.hijab_item, parent, false);
+        return new HijabViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(HijabViewHolder holder, int position) {
-        holder.hijab_text.setText(hijabList.get(position).getName());
+    public void onBindViewHolder(@NonNull final HijabViewHolder holder, final int position) {
 
+        holder.bind(position);
     }
-
 
     @Override
     public int getItemCount() {
         return hijabList.size();
     }
 
+    final class HijabViewHolder extends RecyclerView.ViewHolder {
 
-    class HijabViewHolder extends RecyclerView.ViewHolder {
+        TextView mTitle;
 
-        TextView hijab_text;
-
-        HijabViewHolder(View itemView) {
+        public HijabViewHolder(@NonNull final View itemView) {
             super(itemView);
-            hijab_text = (TextView) itemView.findViewById(R.id.simple_text);
 
+            mTitle = itemView.findViewById(R.id.simple_text);
         }
 
-
+        public void bind(final int position) {
+            mTitle.setText(hijabList.get(position).getName());
+        }
     }
 }
-

@@ -48,4 +48,20 @@ dependencies {
     // For control over item selection of both touch and mouse driven selection
 //    implementation "androidx.recyclerview:recyclerview-selection:$recyclerview_version"
 
+    def room_version = "2.2.2"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version" // For Kotlin use kapt instead of annotationProcessor
+    implementation 'com.facebook.stetho:stetho:1.5.1'
+
+
+    implementation 'com.google.dagger:dagger-android:2.16'
+    implementation "com.google.dagger:dagger-android-support:2.16"
+    implementation 'com.google.dagger:dagger:2.16'
+
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.16'
+
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.16'
+
+
 }
